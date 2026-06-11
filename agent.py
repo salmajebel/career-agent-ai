@@ -1,26 +1,10 @@
 from google import genai
+import os
 
-client = genai.Client()
+client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
 
-def career_agent(cv):
+chat = client.chats.create(model="gemini-3.5-flash")
 
-    prompt = f"""
-You are CareerAgent, an AI career assistant.
-
-TASKS:
-1. Analyze CV
-2. Extract skills
-3. Suggest jobs
-4. Create ATS improvement
-5. Generate LaTeX CV (if possible)
-
-CV:
-{cv}
-"""
-
-    response = client.models.generate_content(
-        model="gemini-3.5-flash",
-        contents=prompt
-    )
-
+def ask_agent(message):
+    response = chat.send_message(message)
     return response.text

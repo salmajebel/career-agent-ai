@@ -1,25 +1,34 @@
 import streamlit as st
-from agent import career_agent
+from agent import ask_agent
 
-st.set_page_config(page_title="CareerAgent", layout="wide")
+st.set_page_config(page_title="CareerAgent Chat", layout="wide")
 
-st.title("🧠 CareerAgent - AI Career Assistant")
+st.title("🧠 CareerAgent Chat")
 
-# INPUT CV
-cv = st.text_area("Paste your CV here")
+# historique chat
+if "messages" not in st.session_state:
+    st.session_state.messages = []
 
-if st.button("Analyze CV"):
+# afficher messages
+for msg in st.session_state.messages:
+    with st.chat_message(msg["role"]):
+        st.write(msg["content"])
 
-    with st.spinner("Analyzing with AI..."):
-        result = career_agent(cv)
+# input chat
+user_input = st.chat_input("Ask your CareerAgent...")
 
-    st.success("Analysis complete!")
+if user_input:
 
-    st.subheader("📄 AI Result")
-    st.write(result)
+    # user message
+    st.session_state.messages.append({"role": "user", "content": user_input})
 
-    st.download_button(
-        "⬇ Download Report",
-        result,
-        file_name="career_report.txt"
-    )
+    with st.chat_message("user"):
+        st.write(user_input)
+
+    # AI response
+    response = ask_agent(user_input)
+
+    st.session_state.messages.append({"role": "assistant", "content": response})
+
+    with st.chat_message("assistant"):
+        st.write(response)

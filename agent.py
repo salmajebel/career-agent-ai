@@ -1,10 +1,36 @@
 import os
-from google.genai import Client
+from google import genai
 
-client = Client(api_key=os.getenv("GOOGLE_API_KEY"))
+# =========================
+# INIT CLIENT
+# =========================
+api_key = os.getenv("GOOGLE_API_KEY")
 
+if not api_key:
+    raise ValueError("Missing GOOGLE_API_KEY")
+
+client = genai.Client(api_key=api_key)
+
+# =========================
+# CHAT MEMORY (simple in RAM)
+# =========================
+chat = client.chats.create(
+    model="gemini-1.5-flash-latest"
+)
+
+# =========================
+# MAIN CHAT FUNCTION
+# =========================
 def ask_agent(message):
-    return client.models.generate_content(
-        model="models/gemini-1.5-flash",
-        contents=message
-    ).text
+    """
+    Free chat agent:
+    - user can ask anything
+    - CV, jobs, roadmap, LaTeX, etc.
+    """
+
+    try:
+        response = chat.send_message(message)
+        return response.text
+
+    except Exception as e:
+        return f"Error: {str(e)}"

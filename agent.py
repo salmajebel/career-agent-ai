@@ -1,15 +1,10 @@
 import os
-from google import genai
+from google.genai import Client
 
-api_key = os.getenv("GOOGLE_API_KEY")
-
-client = genai.Client(
-    api_key=api_key
-)
+client = Client(api_key=os.getenv("GOOGLE_API_KEY"))
 
 def ask_agent(message):
-    response = client.models.generate_content(
-        model="gemini-1.5-flash",
+    return client.models.generate_content(
+        model="models/gemini-1.5-flash",
         contents=message
-    )
-    return response.text
+    ).text

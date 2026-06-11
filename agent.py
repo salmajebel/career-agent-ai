@@ -15,7 +15,7 @@ client = genai.Client(api_key=api_key)
 # CHAT MEMORY (simple in RAM)
 # =========================
 chat = client.chats.create(
-    model="gemini-3.1-flash"
+    model="gemini-3.5-flash"
 )
 
 # =========================
